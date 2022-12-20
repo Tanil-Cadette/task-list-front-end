@@ -13,6 +13,11 @@ const TASKS = [
     title: 'Cook Pasta',
     isComplete: true,
   },
+  {
+    id: 3,
+    title: 'Laundry',
+    isComplete: false,
+  }
 ];
 
 const App = () => {
