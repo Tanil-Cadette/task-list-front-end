@@ -3,7 +3,7 @@ import TaskList from './components/TaskList.js';
 import './App.css';
 import axios from 'axios';
 
-const TASKS = [
+const dummyTask = [
   {
     id: 1,
     title: 'Mow the lawn',
@@ -21,14 +21,13 @@ const checkIfComplete = (taskId) => {
 };
 
 const App = () => {
-  const [taskData, setTaskData] = useState(TASKS);
-  const setTaskDatahehe = () => {
+  const [taskData, setTaskData] = useState(dummyTask);
+
+  const updateTasks = () => {
     return axios
       .get('https://task-list-api-c17.herokuapp.com/tasks')
       .then((response) => {
-        const ourData = response.data;
-        const newData = [...ourData];
-        setTaskData(newData);
+        setTaskData(response.data);
       })
       .catch((error) => {
         console.log(
@@ -41,75 +40,28 @@ const App = () => {
         );
       });
   };
-  /* lets us get Task data when the component is mounted by using useEffect and an empty dependency list*/
-  useEffect(
-    () =>
-      axios
-        .get('https://task-list-api-c17.herokuapp.com/tasks')
-        .then((response) => {
-          setTaskData(response.data);
-          console.log(response.data);
-        })
-        .catch((error) => {
-          console.log(
-            "Anything that isn't status code 2XX is an error:",
-            error.response.status
-          );
-          console.log(
-            'The data from response with an error:',
-            error.response.data
-          );
-        }),
-    []
-  );
+
+  useEffect(() => updateTasks(), []);
 
   const toggleComplete = (taskId) => {
+    let url, message;
     checkIfComplete(taskId).then((result) => {
       if (result) {
-        axios
-          .patch(
-            `https://task-list-api-c17.herokuapp.com/tasks/${taskId}/mark_incomplete`
-          )
-          .then((response) => {
-            console.log('you clicked to mark incomplete');
-            //setTaskData(getTaskData());
-          })
-          .catch((error) => {
-            console.log(
-              "Anything that isn't status code 2XX is an error:",
-              error.response.status
-            );
-            console.log(
-              'The data from response with an error:',
-              error.response.data
-            );
-          });
+        url = `https://task-list-api-c17.herokuapp.com/tasks/${taskId}/mark_incomplete`;
+        message = `The completed task with task id = ${taskId} was marked as incomplete`;
       } else {
-        axios
-          .patch(
-            `https://task-list-api-c17.herokuapp.com/tasks/${taskId}/mark_complete`
-          )
-          .then((response) => {
-            console.log('you clicked to mark complete');
-            //setTaskData(getTaskData());
-          })
-          .catch((error) => {
-            console.log(
-              "Anything that isn't status code 2XX is an error:",
-              error.response.status
-            );
-            console.log(
-              'The data from response with an error:',
-              error.response.data
-            );
-          });
+        url = `https://task-list-api-c17.herokuapp.com/tasks/${taskId}/mark_complete`;
+        message = `The incomplete task with task id = ${taskId} was marked as complete`;
       }
-      setTaskDatahehe();
+      axios.patch(url).then((response) => {
+        console.log(message);
+        console.log(
+          `task that was changed is ${response.data['task']['title']}`
+        );
+        updateTasks();
+      });
     });
   };
-
-  /* wtf */
-
   /*
     const newTaskData = [...taskData];
     for (const task of newTaskData) {
@@ -124,17 +76,8 @@ const App = () => {
     axios
       .delete(`https://task-list-api-c17.herokuapp.com/tasks/${taskId}`)
       .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(
-          "Anything that isn't status code 2XX is an error:",
-          error.response.status
-        );
-        console.log(
-          'The data from response with an error:',
-          error.response.data
-        );
+        console.log(response.body);
+        updateTasks();
       });
     /*
     let taskToBeRemoved;
@@ -151,7 +94,7 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Ada&apos;s Task List</h1>
+        <h1>Pavi and Tania&apos;s Task List</h1>
       </header>
       <main>
         <div>

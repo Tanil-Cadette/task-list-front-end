@@ -28,11 +28,19 @@
   cursor: pointer;
   width: 100%;
   text-align: left;
-  padding: 0.85em 2.25em 0.85em 1em;
+  padding: 1em 2.25em 0.85em 1em;
   background-color: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 10px solid rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
 }
-
+.task__item__description {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 0.5rem;
+  font-style: italic;
+  color: blueviolet;
+}
 button.tasks__item__remove {
   top: 50%;
   right: 0;
@@ -40,5 +48,7 @@ button.tasks__item__remove {
   /* transform: translateY(-50%); */
   /* padding: 0.85em 2.25em 0.85em 1em; */
   font-size: 100%;
+  border-radius: 5px;
+  border: 10px;
   margin: 0;
 }

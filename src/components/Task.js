@@ -21,6 +21,11 @@ const Task = (props) => {
       >
         x
       </button>
+
+      <p className="task__item__description">
+        Description:
+        {props.description}
+      </p>
     </li>
   );
 };
@@ -28,6 +33,7 @@ const Task = (props) => {
 Task.propTypes = {
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
   isComplete: PropTypes.bool,
   onToggleComplete: PropTypes.func.isRequired,
   onDeleteTask: PropTypes.func.isRequired,
