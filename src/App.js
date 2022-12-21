@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import TaskList from './components/TaskList.js';
 import './App.css';
+import NewTaskInput from './components/NewTaskForm.js';
 import axios from 'axios';
 
 const dummyTask = [
@@ -23,6 +24,7 @@ const checkIfComplete = (taskId) => {
 const App = () => {
   const [taskData, setTaskData] = useState(dummyTask);
 
+
   const updateTasks = () => {
     return axios
       .get('https://task-list-api-c17.herokuapp.com/tasks')
@@ -41,7 +43,32 @@ const App = () => {
       });
   };
 
+
   useEffect(() => updateTasks(), []);
+
+  const addNewTaskData= newTask => {
+
+    return axios
+      .post('https://task-list-api-c17.herokuapp.com/tasks', newTask)
+      .then((response) => {
+        const newTaskList = [...taskData];
+        const nextId = Math.max(...newTaskList.map(task => task.id)) +1;
+        newTaskList.push({
+            title: response.data.title,
+            description: response.data.description,
+            id: nextId,
+            isComplete: false,
+            ...newTask});
+        setTaskData(newTaskList);
+      })
+      .catch((error) => {
+        console.log(
+          "Anything that isn't status code 2XX is an error:",
+          error.response.status,
+          error
+        );
+      });
+  };
 
   const toggleComplete = (taskId) => {
     let url, message;
@@ -73,12 +100,25 @@ const App = () => {
     */
 
   const deleteTask = (taskId) => {
-    axios
+    // axios
+    //   .delete(`https://task-list-api-c17.herokuapp.com/tasks/${taskId}`)
+    //   .then((response) => {
+    //     console.log(response.body);
+    //     updateTasks();
+    //   });
+    axios 
       .delete(`https://task-list-api-c17.herokuapp.com/tasks/${taskId}`)
-      .then((response) => {
-        console.log(response.body);
-        updateTasks();
+      .then(()=> {
+        const newTask= taskData.filter((task) => task.id !== taskId);
+        setTaskData(newTask);
+      })
+      .catch((error) => {
+        console.log(error);
       });
+    };
+
+
+  
     /*
     let taskToBeRemoved;
     for (const task of taskData) {
@@ -89,14 +129,14 @@ const App = () => {
     const newTaskData = taskData.filter((task) => task != taskToBeRemoved);
     setTaskData(newTaskData);
     */
-  };
+  
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Pavi and Tania&apos;s Task List</h1>
+        <h1>Ada&apos;s Task List</h1>
       </header>
-      <main>
+      <main className='App-main'>
         <div>
           {
             <TaskList
@@ -105,6 +145,10 @@ const App = () => {
               onDeleteTask={deleteTask}
             />
           }
+        </div>
+        <div className='Form-style'>
+        <NewTaskInput
+        addTaskCallback= {addNewTaskData}></NewTaskInput>
         </div>
       </main>
     </div>

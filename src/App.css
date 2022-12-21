@@ -27,3 +27,14 @@
 .App-link {
   color: #61dafb;
 }
+
+.App-main {
+  border: 1cm;
+}
+
+.Form-style {
+  display:block;
+  text-align:center;
+  border:1px solid;
+  padding:50px;
+}
