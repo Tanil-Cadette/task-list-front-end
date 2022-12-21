@@ -8,10 +8,11 @@ const TaskList = (props) => {
     return tasks.map((task) => {
       return (
         <Task
+          description={task.description}
           key={task.id}
           id={task.id}
           title={task.title}
-          isComplete={task.isComplete}
+          isComplete={task.is_complete}
           onToggleComplete={props.onToggleComplete}
           onDeleteTask={props.onDeleteTask}
         />
@@ -26,9 +27,11 @@ const TaskList = (props) => {
 TaskList.propTypes = {
   tasks: PropTypes.arrayOf(
     PropTypes.shape({
+      description: PropTypes.string.isRequired,
+
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      isComplete: PropTypes.bool.isRequired,
+      isComplete: PropTypes.bool,
     })
   ).isRequired,
   onToggleComplete: PropTypes.func.isRequired,
